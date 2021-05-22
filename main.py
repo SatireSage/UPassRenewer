@@ -19,7 +19,7 @@ def UPass(cas_user_id, cas_user_pass):
     CAS_Password = driver.find_element_by_xpath('//*[@id="password"]')
     CAS_Password.send_keys(cas_user_pass)
     CAS_Login = driver.find_element_by_xpath('//*[@id="fm1"]/input[4]')
-    # CAS_Login.click()
+    CAS_Login.click()
 
 
 def credential_writer(new_file):
@@ -45,33 +45,46 @@ def credential_writer(new_file):
             new_file.write(cas_pass_writer)
             Password_Counter = True
             break
-    print("Thank You!")
+    print("Thank You! Please re-run the file to renew you UPass!")
 
 
-empty_check = os.stat(r'C:\Users\Sahaj\PycharmProjects\UPAss\venv\pass_writer.txt').st_size
-if (path.exists(r'C:\Users\Sahaj\PycharmProjects\UPAss\venv\pass_writer.txt')) and (empty_check != 0):
-    File = open(r"C:\Users\Sahaj\PycharmProjects\UPAss\venv\pass_writer.txt", "r")
-    cas_id = File.readline()
-    cas_pass = File.readline()
+if path.exists(r'C:\Users\Sahaj\PycharmProjects\UPAss\venv\pass_writer.txt'):
+    empty_check = os.stat(r'C:\Users\Sahaj\PycharmProjects\UPAss\venv\pass_writer.txt').st_size
+    if empty_check != 0:
+        File = open(r"C:\Users\Sahaj\PycharmProjects\UPAss\venv\pass_writer.txt", "r")
+        cas_id = File.readline()
+        cas_pass = File.readline()
+        choice = input("Would you like to proceed now: ")
+        try:
+            if choice == "yes" or choice == "Yes" or choice == "y" or choice == "Y":
+                UPass(cas_id, cas_pass)
+            elif choice == "no" or choice == "No" or choice == "n" or choice == "N":
+                print('No worries! Next time just run the file to renew you UPass bc!')
+                quit()
+        except str(choice) not in yes_and_no_array:
+            print("Im sorry please say yes or no!")
+    else:
+        File_Created = open(r'C:\Users\Sahaj\PycharmProjects\UPAss\venv\pass_writer.txt', "a+")
+        choice = input("Would you like to proceed now: ")
+        try:
+            if choice == "yes" or choice == "Yes" or choice == "y" or choice == "Y":
+                credential_writer(File_Created)
+            elif choice == "no" or choice == "No" or choice == "n" or choice == "N":
+                print('No worries! Next time just run the file to renew you UPass bc!')
+                quit()
+        except str(choice) not in yes_and_no_array:
+            print("Im sorry please say yes or no!")
+else:
+    File_Created = open(r'C:\Users\Sahaj\PycharmProjects\UPAss\venv\pass_writer.txt', "a+")
     choice = input("Would you like to proceed now: ")
     try:
         if choice == "yes" or choice == "Yes" or choice == "y" or choice == "Y":
-            UPass(cas_id, cas_pass)
+            credential_writer(File_Created)
         elif choice == "no" or choice == "No" or choice == "n" or choice == "N":
-            print('No worries! Next time just run the file to renew you upass bc!')
+            print('No worries! Next time just run the file to renew you UPass bc!')
             quit()
     except str(choice) not in yes_and_no_array:
         print("Im sorry please say yes or no!")
-else:
-    File_Created = open(r'C:\Users\Sahaj\PycharmProjects\UPAss\venv\pass_writer.txt', "a+")
-    credential_writer(File_Created)
-    cas_id_created = File_Created.readline()
-    cas_pass_created = File_Created.readline()
-    choice = input("Would you like to proceed now: ")
-    try:
-        if choice == "yes" or choice == "Yes" or choice == "y" or choice == "Y":
-            UPass(cas_id_created, cas_pass_created)
-        elif choice == "no" or choice == "No" or choice == "n" or choice == "N":
-            print("No worries! Next time just run the file to renew you UPass bc!")
-    except str(choice) not in yes_and_no_array:
-        print("Im sorry please say yes or no!")
+
+# Currently doesn't do anything past login and when user says something other than no it dosen't make sure to retry
+# Need to make it work for different systems and browsers

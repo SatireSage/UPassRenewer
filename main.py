@@ -1,34 +1,76 @@
 from selenium import webdriver
+from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.chrome.options import Options
 import os
+import sys
 from os import path
+import time
+# import schedule
 
 yes_and_no_array = ["yes", "no", "Yes", "No", "y", "n", "Y", "N"]
 
 
 def UPass(cas_user_id, cas_user_pass, user_compass_num, user_cvn_num):
-    driver = webdriver.Chrome(executable_path=r"C:\Users\Sahaj\Downloads\chromedriver_win32 (1)\chromedriver")
+    options = Options()
+    # options.add_argument('--headless')
+    # options.add_argument('--disable-gpu')
+    options.headless = True
+    driver = webdriver.Chrome(executable_path=r"C:\Users\Sahaj\PycharmProjects\UPAss\chromedriver.exe", options=options)
     driver.get("https://upassbc.translink.ca/")
+    print("Headless Chrome Initialized")
+    time.sleep(2)
     SFU_Element = driver.find_element_by_xpath('//*[@id="PsiId"]/option[9]')
     SFU_Element.click()
     Button = driver.find_element_by_xpath('//*[@id="goButton"]')
     Button.click()
+    print("Logging into CAS")
+    time.sleep(2)
     CAS_Username = driver.find_element_by_xpath('//*[@id="username"]')
     CAS_Username.send_keys(cas_user_id)
     CAS_Password = driver.find_element_by_xpath('//*[@id="password"]')
     CAS_Password.send_keys(cas_user_pass)
-    # CAS_Login = driver.find_element_by_xpath('//*[@id="fm1"]/input[4]')
-    # CAS_Login.click()
     if driver.current_url == 'https://upassbc.translink.ca/fs/CompassCard/Link':
+        print("Linking Compass Card")
+        time.sleep(2)
         Compass_Num = driver.find_element_by_xpath('//*[@id="link-CompassNumber"]')
         Compass_Num.send_keys(user_compass_num)
         CVN_Num = driver.find_element_by_xpath('//*[@id="link-CVN"]')
         CVN_Num.send_keys(user_cvn_num)
         Compass_Link_Card = driver.find_element_by_xpath('//*[@id="btnLink"]')
-        #Compass_Link_Card.click()
-        input("Please press a key")
-    elif driver.current_url == 'https://upassbc.translink.ca/fs/':
-        Compass_Data = driver.find_element_by_xpath('//*[@id="form-request"]/table/tbody/tr[1]/td[3]')
-        Compass_Body = driver.find_element_by_xpath('//*[@id="form-request"]/table/tbody')
+        Compass_Link_Card.click()
+    if driver.current_url == 'https://upassbc.translink.ca/fs/':
+        time.sleep(2)
+        print("Opening Compass")
+        try:
+            Compass_Status = driver.find_element_by_xpath('//*[@id="form-request"]/table/tbody/tr[2]/td[3]/div')
+            print(Compass_Status.text)
+            print("Thanks!\n")
+        except NoSuchElementException:
+            print("No Status yet")
+            pass
+
+        try:
+            Compass_Check_Present = driver.find_element_by_xpath('//*[@id="chk_0"]')
+            Compass_Check_Present.click()
+        except NoSuchElementException:
+            print("Checked")
+            pass
+
+        try:
+            Compass_Check_Present2 = driver.find_element_by_xpath('//*[@id="chk_1"]')
+            Compass_Check_Present2.click()
+        except NoSuchElementException:
+            print("Checked\n")
+            pass
+
+        try:
+            time.sleep(2)
+            Compass_Check_Request = driver.find_element_by_xpath('//*[@id="requestButton"]')
+            Compass_Check_Request.click()
+        except NoSuchElementException:
+            print("Requested")
+            pass
+    time.sleep(2)
 
 
 def credential_writer(new_file):
@@ -41,6 +83,7 @@ def credential_writer(new_file):
         else:
             new_file.write(cas_uid_writer)
             break
+    print("\n")
     Password_Counter = False
     while not Password_Counter:
         cas_pass_writer = input('Please enter your CAS Password: ')
@@ -51,6 +94,7 @@ def credential_writer(new_file):
             new_file.write("\n")
             new_file.write(cas_pass_writer)
             break
+    print("\n")
     Compass_Counter = False
     while not Compass_Counter:
         compassID_writer = input('Please enter your Compass Card Number: ')
@@ -61,6 +105,7 @@ def credential_writer(new_file):
             new_file.write("\n")
             new_file.write(compassID_writer)
             break
+    print("\n")
     CVN_Counter = False
     while not CVN_Counter:
         CVN_writer = input('Please enter your CVN Number: ')
@@ -71,48 +116,57 @@ def credential_writer(new_file):
             new_file.write("\n")
             new_file.write(CVN_writer)
             break
+    print("\n")
     print("Thank You! Please re-run the file to renew you UPass!")
 
 
-if path.exists(r'C:\Users\Sahaj\PycharmProjects\UPAss\venv\pass_writer.txt'):
-    empty_check = os.stat(r'C:\Users\Sahaj\PycharmProjects\UPAss\venv\pass_writer.txt').st_size
-    if empty_check != 0:
-        File = open(r"C:\Users\Sahaj\PycharmProjects\UPAss\venv\pass_writer.txt", "r")
-        cas_id = File.readline()
-        cas_pass = File.readline()
-        compass_num = File.readline()
-        cvn_num = File.readline()
+def runner():
+    File = open(r"C:\Users\Sahaj\PycharmProjects\UPAss\pass_writer.txt", "r")
+    cas_id = File.readline()
+    cas_pass = File.readline()
+    compass_num = File.readline()
+    cvn_num = File.readline()
+    while True:
         choice = input("Would you like to proceed now: ")
-        try:
-            if choice == "yes" or choice == "Yes" or choice == "y" or choice == "Y":
-                UPass(cas_id, cas_pass, compass_num, cvn_num)
-            elif choice == "no" or choice == "No" or choice == "n" or choice == "N":
-                print('No worries! Next time just run the file to renew you UPass bc!')
-                quit()
-        except str(choice) not in yes_and_no_array:
-            print("Im sorry please say yes or no!")
-    else:
-        File_Created = open(r'C:\Users\Sahaj\PycharmProjects\UPAss\venv\pass_writer.txt', "a+")
-        choice = input("Would you like to proceed now: ")
-        try:
-            if choice == "yes" or choice == "Yes" or choice == "y" or choice == "Y":
-                credential_writer(File_Created)
-            elif choice == "no" or choice == "No" or choice == "n" or choice == "N":
-                print('No worries! Next time just run the file to renew you UPass bc!')
-                quit()
-        except str(choice) not in yes_and_no_array:
-            print("Im sorry please say yes or no!")
-else:
-    File_Created = open(r'C:\Users\Sahaj\PycharmProjects\UPAss\venv\pass_writer.txt', "a+")
-    choice = input("Would you like to proceed now: ")
-    try:
         if choice == "yes" or choice == "Yes" or choice == "y" or choice == "Y":
-            credential_writer(File_Created)
+            UPass(cas_id, cas_pass, compass_num, cvn_num)
+            break
         elif choice == "no" or choice == "No" or choice == "n" or choice == "N":
             print('No worries! Next time just run the file to renew you UPass bc!')
-            quit()
-    except str(choice) not in yes_and_no_array:
-        print("Im sorry please say yes or no!")
+            sys.exit()
+        else:
+            print("Im sorry please say yes or no!")
+            runner()
+
+
+def runner2():
+    File_Created = open(r'C:\Users\Sahaj\PycharmProjects\UPAss\pass_writer.txt', "a+")
+    choice = input("Would you like to proceed now: ")
+    while True:
+        if choice == "yes" or choice == "Yes" or choice == "y" or choice == "Y":
+            credential_writer(File_Created)
+            break
+        elif choice == "no" or choice == "No" or choice == "n" or choice == "N":
+            print('No worries! Next time just run the file to renew you UPass bc!')
+            sys.exit()
+        else:
+            print("Im sorry please say yes or no!")
+            runner2()
+
+
+def main():
+    if path.exists(r'C:\Users\Sahaj\PycharmProjects\UPAss\pass_writer.txt'):
+        empty_check = os.stat(r'C:\Users\Sahaj\PycharmProjects\UPAss\pass_writer.txt').st_size
+        if empty_check != 0:
+            runner()
+        else:
+            runner2()
+    else:
+        runner2()
+
+
+main()
+# schedule.every().monday.do(main())
 
 # Currently doesn't do anything past login and when user says something other than no it doesn't make sure to retry
 # Need to make it work for different systems and browsers

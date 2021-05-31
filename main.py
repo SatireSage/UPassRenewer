@@ -2,12 +2,17 @@ from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.chrome.options import Options
 import os
-import sys
+# import sys
 from os import path
 import time
+from tkinter import *
+from tkinter import messagebox
 # import schedule
 
 yes_and_no_array = ["yes", "no", "Yes", "No", "y", "n", "Y", "N"]
+window = Tk()
+window.eval('tk::PlaceWindow %s center' % window.winfo_toplevel())
+window.withdraw()
 
 
 def UPass(cas_user_id, cas_user_pass, user_compass_num, user_cvn_num):
@@ -21,8 +26,8 @@ def UPass(cas_user_id, cas_user_pass, user_compass_num, user_cvn_num):
     time.sleep(2)
     SFU_Element = driver.find_element_by_xpath('//*[@id="PsiId"]/option[9]')
     SFU_Element.click()
-    Button = driver.find_element_by_xpath('//*[@id="goButton"]')
-    Button.click()
+    SFU_Button = driver.find_element_by_xpath('//*[@id="goButton"]')
+    SFU_Button.click()
     print("Logging into CAS")
     time.sleep(2)
     CAS_Username = driver.find_element_by_xpath('//*[@id="username"]')
@@ -44,6 +49,7 @@ def UPass(cas_user_id, cas_user_pass, user_compass_num, user_cvn_num):
         try:
             Compass_Status = driver.find_element_by_xpath('//*[@id="form-request"]/table/tbody/tr[2]/td[3]/div')
             print(Compass_Status.text)
+            messagebox.showinfo(title='Status', message=Compass_Status.text)
             print("Thanks!\n")
         except NoSuchElementException:
             print("No Status yet")
@@ -126,32 +132,42 @@ def runner():
     cas_pass = File.readline()
     compass_num = File.readline()
     cvn_num = File.readline()
-    while True:
-        choice = input("Would you like to proceed now: ")
-        if choice == "yes" or choice == "Yes" or choice == "y" or choice == "Y":
-            UPass(cas_id, cas_pass, compass_num, cvn_num)
-            break
-        elif choice == "no" or choice == "No" or choice == "n" or choice == "N":
-            print('No worries! Next time just run the file to renew you UPass bc!')
-            sys.exit()
-        else:
-            print("Im sorry please say yes or no!")
-            runner()
+    if messagebox.askyesno('Proceed?', 'Would you like to proceed now?'):
+        UPass(cas_id, cas_pass, compass_num, cvn_num)
+    else:
+        messagebox.showinfo('Exit', 'No worries! Next time just run the file to renew you UPass bc!')
+        sys.exit()
+    # while True:
+    #     choice = input("Would you like to proceed now: ")
+    #     if choice == "yes" or choice == "Yes" or choice == "y" or choice == "Y":
+    #         UPass(cas_id, cas_pass, compass_num, cvn_num)
+    #         break
+    #     elif choice == "no" or choice == "No" or choice == "n" or choice == "N":
+    #         print('No worries! Next time just run the file to renew you UPass bc!')
+    #         sys.exit()
+    #     else:
+    #         print("Im sorry please say yes or no!")
+    #         runner()
 
 
 def runner2():
     File_Created = open(r'C:\Users\Sahaj\PycharmProjects\UPAss\pass_writer.txt', "a+")
-    choice = input("Would you like to proceed now: ")
-    while True:
-        if choice == "yes" or choice == "Yes" or choice == "y" or choice == "Y":
-            credential_writer(File_Created)
-            break
-        elif choice == "no" or choice == "No" or choice == "n" or choice == "N":
-            print('No worries! Next time just run the file to renew you UPass bc!')
-            sys.exit()
-        else:
-            print("Im sorry please say yes or no!")
-            runner2()
+    if messagebox.askyesno('Proceed?', 'Would you like to proceed now?'):
+        credential_writer(File_Created)
+    else:
+        messagebox.showinfo('Exit', 'No worries! Next time just run the file to renew you UPass bc!')
+        sys.exit()
+    # choice = input("Would you like to proceed now: ")
+    # while True:
+    #     if choice == "yes" or choice == "Yes" or choice == "y" or choice == "Y":
+    #         credential_writer(File_Created)
+    #         break
+    #     elif choice == "no" or choice == "No" or choice == "n" or choice == "N":
+    #         print('No worries! Next time just run the file to renew you UPass bc!')
+    #         sys.exit()
+    #     else:
+    #         print("Im sorry please say yes or no!")
+    #         runner2()
 
 
 def main():

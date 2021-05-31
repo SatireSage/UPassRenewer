@@ -2,33 +2,57 @@ from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.chrome.options import Options
 import os
-# import sys
 from os import path
 import time
 from tkinter import *
 from tkinter import messagebox
-# import schedule
 
-yes_and_no_array = ["yes", "no", "Yes", "No", "y", "n", "Y", "N"]
 window = Tk()
 window.eval('tk::PlaceWindow %s center' % window.winfo_toplevel())
 window.withdraw()
 
 
-def UPass(cas_user_id, cas_user_pass, user_compass_num, user_cvn_num):
+def UPass(uni, cas_user_id, cas_user_pass, user_compass_num, user_cvn_num):
     options = Options()
-    # options.add_argument('--headless')
-    # options.add_argument('--disable-gpu')
     options.headless = True
     driver = webdriver.Chrome(executable_path=r"C:\Users\Sahaj\PycharmProjects\UPAss\chromedriver.exe", options=options)
     driver.get("https://upassbc.translink.ca/")
-    print("Headless Chrome Initialized")
     time.sleep(2)
-    SFU_Element = driver.find_element_by_xpath('//*[@id="PsiId"]/option[9]')
-    SFU_Element.click()
-    SFU_Button = driver.find_element_by_xpath('//*[@id="goButton"]')
-    SFU_Button.click()
-    print("Logging into CAS")
+    if uni == 1:
+        BCIT_Element = driver.find_element_by_xpath('//*[@id="PsiId"]/option[2]')
+        BCIT_Element.click()
+    elif uni == 2:
+        Cap_Element = driver.find_element_by_xpath('//*[@id="PsiId"]/option[3]')
+        Cap_Element.click()
+    elif uni == 3:
+        Douglas_Element = driver.find_element_by_xpath('//*[@id="PsiId"]/option[4]')
+        Douglas_Element.click()
+    elif uni == 4:
+        ECARR_Element = driver.find_element_by_xpath('//*[@id="PsiId"]/option[5]')
+        ECARR_Element.click()
+    elif uni == 5:
+        KPU_Element = driver.find_element_by_xpath('//*[@id="PsiId"]/option[6]')
+        KPU_Element.click()
+    elif uni == 6:
+        Langara_Element = driver.find_element_by_xpath('//*[@id="PsiId"]/option[7]')
+        Langara_Element.click()
+    elif uni == 7:
+        NVIT_Element = driver.find_element_by_xpath('//*[@id="PsiId"]/option[8]')
+        NVIT_Element.click()
+    elif uni == 8:
+        SFU_Element = driver.find_element_by_xpath('//*[@id="PsiId"]/option[9]')
+        SFU_Element.click()
+    elif uni == 9:
+        UBC_Element = driver.find_element_by_xpath('//*[@id="PsiId"]/option[10]')
+        UBC_Element.click()
+    elif uni == 10:
+        VCC_Element = driver.find_element_by_xpath('//*[@id="PsiId"]/option[11]')
+        VCC_Element.click()
+    else:
+        Empty_Element = driver.find_element_by_xpath('//*[@id="PsiId"]/option[1]')
+        Empty_Element.click()
+    Go_Button = driver.find_element_by_xpath('//*[@id="goButton"]')
+    Go_Button.click()
     time.sleep(2)
     CAS_Username = driver.find_element_by_xpath('//*[@id="username"]')
     CAS_Username.send_keys(cas_user_id)
@@ -128,26 +152,16 @@ def credential_writer(new_file):
 
 def runner():
     File = open(r"C:\Users\Sahaj\PycharmProjects\UPAss\pass_writer.txt", "r")
+    uni_name = File.readline()
     cas_id = File.readline()
     cas_pass = File.readline()
     compass_num = File.readline()
     cvn_num = File.readline()
     if messagebox.askyesno('Proceed?', 'Would you like to proceed now?'):
-        UPass(cas_id, cas_pass, compass_num, cvn_num)
+        UPass(uni_name, cas_id, cas_pass, compass_num, cvn_num)
     else:
         messagebox.showinfo('Exit', 'No worries! Next time just run the file to renew you UPass bc!')
         sys.exit()
-    # while True:
-    #     choice = input("Would you like to proceed now: ")
-    #     if choice == "yes" or choice == "Yes" or choice == "y" or choice == "Y":
-    #         UPass(cas_id, cas_pass, compass_num, cvn_num)
-    #         break
-    #     elif choice == "no" or choice == "No" or choice == "n" or choice == "N":
-    #         print('No worries! Next time just run the file to renew you UPass bc!')
-    #         sys.exit()
-    #     else:
-    #         print("Im sorry please say yes or no!")
-    #         runner()
 
 
 def runner2():
@@ -157,17 +171,6 @@ def runner2():
     else:
         messagebox.showinfo('Exit', 'No worries! Next time just run the file to renew you UPass bc!')
         sys.exit()
-    # choice = input("Would you like to proceed now: ")
-    # while True:
-    #     if choice == "yes" or choice == "Yes" or choice == "y" or choice == "Y":
-    #         credential_writer(File_Created)
-    #         break
-    #     elif choice == "no" or choice == "No" or choice == "n" or choice == "N":
-    #         print('No worries! Next time just run the file to renew you UPass bc!')
-    #         sys.exit()
-    #     else:
-    #         print("Im sorry please say yes or no!")
-    #         runner2()
 
 
 def main():
@@ -182,7 +185,3 @@ def main():
 
 
 main()
-# schedule.every().monday.do(main())
-
-# Currently doesn't do anything past login and when user says something other than no it doesn't make sure to retry
-# Need to make it work for different systems and browsers

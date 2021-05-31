@@ -7,12 +7,16 @@ from os import path
 import time
 from tkinter import *
 from tkinter import messagebox
+from tkinter import simpledialog
+from enum import Enum
+
 # import schedule
 
 yes_and_no_array = ["yes", "no", "Yes", "No", "y", "n", "Y", "N"]
 window = Tk()
 window.eval('tk::PlaceWindow %s center' % window.winfo_toplevel())
 window.withdraw()
+mainframe = Frame(window)
 
 
 def UPass(cas_user_id, cas_user_pass, user_compass_num, user_cvn_num):
@@ -20,7 +24,7 @@ def UPass(cas_user_id, cas_user_pass, user_compass_num, user_cvn_num):
     # options.add_argument('--headless')
     # options.add_argument('--disable-gpu')
     options.headless = True
-    driver = webdriver.Chrome(executable_path=r"C:\Users\Sahaj\PycharmProjects\UPAss\chromedriver.exe", options=options)
+    driver = webdriver.Chrome(executable_path=r"\chromedriver.exe", options=options)
     driver.get("https://upassbc.translink.ca/")
     print("Headless Chrome Initialized")
     time.sleep(2)
@@ -80,6 +84,39 @@ def UPass(cas_user_id, cas_user_pass, user_compass_num, user_cvn_num):
 
 
 def credential_writer(new_file):
+    # UNIVERSITIES = [
+    #     '-',
+    #     'British Columbia Institute of Technology',
+    #     'Capilano University',
+    #     'Douglas College',
+    #     'Emily Carr University of Art and Design',
+    #     'Kwantlen Polytechnic University',
+    #     'Langara College',
+    #     'Nicola Valley Institute of Technology',
+    #     'Simon Fraser University',
+    #     'University of British Columbia',
+    #     'Vancouver Community College'
+    # ]
+    # university_writer = StringVar(window)
+    # university_writer.set(UNIVERSITIES[0])
+    #
+    # Credentials_Counter = False
+    # while not Credentials_Counter:
+    #     w = OptionMenu(mainframe, university_writer, *UNIVERSITIES)
+    #     w.pack()
+    #     window.mainloop()
+    #     print(university_writer.get())
+    #
+    #     uid_writer = simpledialog.askstring("Credentials", "Please enter your username")
+    #     password_writer = simpledialog.askstring("Credentials", "Please enter your password")
+    #     compass_card_writer = simpledialog.askstring("Credentials", "Please enter your Compass Card Number")
+    #     cvn_writer = simpledialog.askstring("Credentials", "Please enter your CVN")
+    #
+    #     Credentials_Counter = messagebox.askyesno('Credentials?',
+    #                                               "Is this information correct? Press No to re-enter info.\nUsername: " + uid_writer
+    #                                               + "\nPassword: " + password_writer + "\nCompass Card Number: " + compass_card_writer
+    #                                               + "\nCVN: " + cvn_writer)
+
     Username_Counter = False
     while not Username_Counter:
         cas_uid_writer = input('Please enter your CAS Username: ')
@@ -127,7 +164,7 @@ def credential_writer(new_file):
 
 
 def runner():
-    File = open(r"C:\Users\Sahaj\PycharmProjects\UPAss\pass_writer.txt", "r")
+    File = open(r"\pass_writer.txt", "r")
     cas_id = File.readline()
     cas_pass = File.readline()
     compass_num = File.readline()
@@ -151,7 +188,7 @@ def runner():
 
 
 def runner2():
-    File_Created = open(r'C:\Users\Sahaj\PycharmProjects\UPAss\pass_writer.txt', "a+")
+    File_Created = open(r'\pass_writer.txt', "a+")
     if messagebox.askyesno('Proceed?', 'Would you like to proceed now?'):
         credential_writer(File_Created)
     else:
@@ -171,8 +208,8 @@ def runner2():
 
 
 def main():
-    if path.exists(r'C:\Users\Sahaj\PycharmProjects\UPAss\pass_writer.txt'):
-        empty_check = os.stat(r'C:\Users\Sahaj\PycharmProjects\UPAss\pass_writer.txt').st_size
+    if path.exists(r'\pass_writer.txt'):
+        empty_check = os.stat(r'\pass_writer.txt').st_size
         if empty_check != 0:
             runner()
         else:

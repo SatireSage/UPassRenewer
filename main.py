@@ -2,6 +2,7 @@ from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.chrome.options import Options
 import os
+import sys
 from os import path
 import time
 from tkinter import *
@@ -17,9 +18,10 @@ mainframe = Frame(window)
 def UPass(uni, cas_user_id, cas_user_pass, user_compass_num, user_cvn_num):
     options = Options()
     options.headless = True
-    driver = webdriver.Chrome(executable_path=r"\chromedriver.exe", options=options)
+    driver = webdriver.Chrome(executable_path=r"C:\Users\Sahaj\PycharmProjects\UPAss\chromedriver.exe", options=options)
     driver.get("https://upassbc.translink.ca/")
     time.sleep(2)
+    uni = int(uni)
     if uni == 1:
         BCIT_Element = driver.find_element_by_xpath('//*[@id="PsiId"]/option[2]')
         BCIT_Element.click()
@@ -187,7 +189,7 @@ def credential_writer(new_file):
 
 def runner():
 
-    File = open(r"\pass_writer.txt", "r")
+    File = open(r"C:\Users\Sahaj\PycharmProjects\UPAss\pass_writer.txt", "r")
     uni_name = File.readline()
     cas_id = File.readline()
     cas_pass = File.readline()
@@ -201,7 +203,7 @@ def runner():
 
 
 def runner2():
-    File_Created = open(r'\pass_writer.txt', "a+")
+    File_Created = open(r'C:\Users\Sahaj\PycharmProjects\UPAss\pass_writer.txt', "a+")
     if messagebox.askyesno('Proceed?', 'Would you like to proceed now?'):
         credential_writer(File_Created)
     else:
@@ -210,8 +212,8 @@ def runner2():
 
 
 def main():
-    if path.exists(r'\pass_writer.txt'):
-        empty_check = os.stat(r'\pass_writer.txt').st_size
+    if path.exists(r'C:\Users\Sahaj\PycharmProjects\UPAss\pass_writer.txt'):
+        empty_check = os.stat(r'C:\Users\Sahaj\PycharmProjects\UPAss\pass_writer.txt').st_size
         if empty_check != 0:
             runner()
         else:

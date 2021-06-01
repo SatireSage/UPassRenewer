@@ -10,9 +10,9 @@ from tkinter import *
 from tkinter import messagebox
 from tkinter import simpledialog
 
+global window
 window = Tk()
 window.eval('tk::PlaceWindow %s center' % window.winfo_toplevel())
-# window.withdraw()
 
 
 def UPass(uni, cas_user_id, cas_user_pass, user_compass_num, user_cvn_num):
@@ -108,9 +108,6 @@ def UPass(uni, cas_user_id, cas_user_pass, user_compass_num, user_cvn_num):
 
 
 def unis():
-    window2 = Tk()
-    window2.geometry('400x400')
-    window2.eval('tk::PlaceWindow %s center' % window2.winfo_toplevel())
     UNIVERSITIES = [
         ' ',
         'British Columbia Institute of Technology',
@@ -124,13 +121,13 @@ def unis():
         'University of British Columbia',
         'Vancouver Community College'
     ]
-    university_writer = StringVar(window2)
+    university_writer = StringVar(window)
     university_writer.set(UNIVERSITIES[0])
-    w = OptionMenu(window2, university_writer, *UNIVERSITIES)
+    w = OptionMenu(window, university_writer, *UNIVERSITIES)
     w.config(width=90, font=('Helvetica', 12))
     w.pack()
-    Button(window2, text='Next', command=window2.destroy).pack()
-    window2.mainloop()
+    Button(window, text='Next', command= window.destroy).pack()
+    window.mainloop()
     index = UNIVERSITIES.index(university_writer.get())
     return index
 

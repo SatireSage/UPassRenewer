@@ -5,14 +5,14 @@ import os
 import sys
 from os import path
 import time
+import tkinter as tk
 from tkinter import *
 from tkinter import messagebox
 from tkinter import simpledialog
 
 window = Tk()
 window.eval('tk::PlaceWindow %s center' % window.winfo_toplevel())
-window.withdraw()
-mainframe = Frame(window)
+# window.withdraw()
 
 
 def UPass(uni, cas_user_id, cas_user_pass, user_compass_num, user_cvn_num):
@@ -107,84 +107,50 @@ def UPass(uni, cas_user_id, cas_user_pass, user_compass_num, user_cvn_num):
     time.sleep(2)
 
 
-def credential_writer(new_file):
-    # UNIVERSITIES = [
-    #     '-',
-    #     'British Columbia Institute of Technology',
-    #     'Capilano University',
-    #     'Douglas College',
-    #     'Emily Carr University of Art and Design',
-    #     'Kwantlen Polytechnic University',
-    #     'Langara College',
-    #     'Nicola Valley Institute of Technology',
-    #     'Simon Fraser University',
-    #     'University of British Columbia',
-    #     'Vancouver Community College'
-    # ]
-    # university_writer = StringVar(window)
-    # university_writer.set(UNIVERSITIES[0])
-    #
-    # Credentials_Counter = False
-    # while not Credentials_Counter:
-    #     w = OptionMenu(mainframe, university_writer, *UNIVERSITIES)
-    #     w.pack()
-    #     window.mainloop()
-    #     print(university_writer.get())
-    #
-    #     uid_writer = simpledialog.askstring("Credentials", "Please enter your username")
-    #     password_writer = simpledialog.askstring("Credentials", "Please enter your password")
-    #     compass_card_writer = simpledialog.askstring("Credentials", "Please enter your Compass Card Number")
-    #     cvn_writer = simpledialog.askstring("Credentials", "Please enter your CVN")
-    #
-    #     Credentials_Counter = messagebox.askyesno('Credentials?',
-    #                                               "Is this information correct? Press No to re-enter info.\nUsername: " + uid_writer
-    #                                               + "\nPassword: " + password_writer + "\nCompass Card Number: " + compass_card_writer
-    #                                               + "\nCVN: " + cvn_writer)
+def unis():
+    window2 = Tk()
+    window2.geometry('400x400')
+    window2.eval('tk::PlaceWindow %s center' % window2.winfo_toplevel())
+    UNIVERSITIES = [
+        ' ',
+        'British Columbia Institute of Technology',
+        'Capilano University',
+        'Douglas College',
+        'Emily Carr University of Art and Design',
+        'Kwantlen Polytechnic University',
+        'Langara College',
+        'Nicola Valley Institute of Technology',
+        'Simon Fraser University',
+        'University of British Columbia',
+        'Vancouver Community College'
+    ]
+    university_writer = StringVar(window2)
+    university_writer.set(UNIVERSITIES[0])
+    w = OptionMenu(window2, university_writer, *UNIVERSITIES)
+    w.config(width=90, font=('Helvetica', 12))
+    w.pack()
+    Button(window2, text='Next', command=window2.destroy).pack()
+    window2.mainloop()
+    index = UNIVERSITIES.index(university_writer.get())
+    return index
 
-    Username_Counter = False
-    while not Username_Counter:
-        cas_uid_writer = input('Please enter your CAS Username: ')
-        id_check = input("Please re-enter your username: ")
-        if cas_uid_writer != id_check:
-            print("You entered the wrong username! Please try again")
-        else:
-            new_file.write(cas_uid_writer)
-            break
-    print("\n")
-    Password_Counter = False
-    while not Password_Counter:
-        cas_pass_writer = input('Please enter your CAS Password: ')
-        pass_check = input("Please re-enter your Password: ")
-        if cas_pass_writer != pass_check:
-            print("You entered the wrong Password! Please try again")
-        else:
-            new_file.write("\n")
-            new_file.write(cas_pass_writer)
-            break
-    print("\n")
-    Compass_Counter = False
-    while not Compass_Counter:
-        compassID_writer = input('Please enter your Compass Card Number: ')
-        compass_check = input("Please re-enter your Compass Card Number: ")
-        if compassID_writer != compass_check:
-            print("You entered the wrong Password! Please try again")
-        else:
-            new_file.write("\n")
-            new_file.write(compassID_writer)
-            break
-    print("\n")
-    CVN_Counter = False
-    while not CVN_Counter:
-        CVN_writer = input('Please enter your CVN Number: ')
-        CVN_check = input("Please re-enter your CVN Number: ")
-        if CVN_writer != CVN_check:
-            print("You entered the wrong Password! Please try again")
-        else:
-            new_file.write("\n")
-            new_file.write(CVN_writer)
-            break
-    print("\n")
-    print("Thank You! Please re-run the file to renew you UPass!")
+
+global my_uni
+my_uni = unis()
+
+
+def credential_writer(new_file):
+    Credentials_Counter = False
+    while not Credentials_Counter:
+        uid_writer = simpledialog.askstring("Credentials", "Please enter your username")
+        password_writer = simpledialog.askstring("Credentials", "Please enter your password")
+        compass_card_writer = simpledialog.askstring("Credentials", "Please enter your Compass Card Number")
+        cvn_writer = simpledialog.askstring("Credentials", "Please enter your CVN")
+
+        Credentials_Counter = messagebox.askyesno('Credentials?',
+                                                  "Is this information correct? Press No to re-enter info.\nUsername: " + uid_writer
+                                                  + "\nPassword: " + password_writer + "\nCompass Card Number: " + compass_card_writer
+                                                  + "\nCVN: " + cvn_writer)
 
 
 def runner():
